@@ -1,6 +1,8 @@
 # c_codes
 c codes from school 
 
+To compile 
+
 ```
 gcc -Wall filename.c –o filename
 ```
