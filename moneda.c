@@ -2,52 +2,51 @@
 #include <stdlib.h>
 #include <time.h>
 
-int main ()
-{
-  int n;
-  int mon=0;
-  int ag=0;
-  int sel=0;
-  int con1=0;
-  int con2=0;
-  int ev;
+int main() {
+  int num_lanzamientos;
+  int num_repeticiones;
+  int aguilas = 0;
+  int sellos = 0;
+  int resultado;
 
   srand(time(NULL));
 
-  FILE * f1 = fopen("aguilas.dat","w");
-  FILE * f2 = fopen("sellos.dat","w");
+  FILE *f_aguilas = fopen("aguilas.dat", "w");
+  FILE *f_sellos = fopen("sellos.dat", "w");
 
-  printf(" Cuantas veces quieres lanzar? \n");
-  scanf("%d",&n);
-  printf("Cuantas veces se repetira ? \n");
-  scanf("%d",&ev);
-  
-for (con2=0; con2< ev; con2++)
-  
-    {
-      for (con1=0; con1<n; con1 ++)
-        {
-	  mon=rand()%2;
-	  if (mon==0)
-	    {
-	      ag++;
-	    }
-	  else
-	    {
-	      sel++;
-	    }
-	}
-      printf("%d %d %d\n", ag, sel, con2+1);
-      fprintf(f1, "%d\n",ag);
-      fprintf(f2, "%d\n",sel);
+  if (!f_aguilas || !f_sellos) {
+    printf("Error: No se pudieron abrir los archivos de salida.\n");
+    if (f_aguilas)
+      fclose(f_aguilas);
+    if (f_sellos)
+      fclose(f_sellos);
+    return 1;
+  }
 
-      ag=0;
-      sel=0;
-        
+  printf("¿Cuántas veces quieres lanzar la moneda por intento? \n");
+  scanf("%d", &num_lanzamientos);
+  printf("¿Cuántas veces se repetirá el experimento? \n");
+  scanf("%d", &num_repeticiones);
+
+  for (int j = 0; j < num_repeticiones; j++) {
+    for (int i = 0; i < num_lanzamientos; i++) {
+      resultado = rand() % 2;
+      if (resultado == 0) {
+        aguilas++;
+      } else {
+        sellos++;
       }
-  
-fclose(f1);
-fclose(f2);
+    }
+    printf("Intento %d: Aguilas = %d, Sellos = %d\n", j + 1, aguilas, sellos);
+    fprintf(f_aguilas, "%d\n", aguilas);
+    fprintf(f_sellos, "%d\n", sellos);
 
-return 0;
+    aguilas = 0;
+    sellos = 0;
+  }
+
+  fclose(f_aguilas);
+  fclose(f_sellos);
+
+  return 0;
 }
