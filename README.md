@@ -1,5 +1,177 @@
 # c_codes 🧮
 
+> 🇺🇸 [English](#english) | 🇲🇽 [Español](#español)
+
+---
+
+## English
+
+Collection of C programs developed for numerical applications and physics-math simulations.
+
+---
+
+### Compilation
+
+To compile any file:
+
+```bash
+gcc -Wall -Wextra -std=c99 -o program_name file.c -lm
+```
+
+> The `-lm` flag is required for programs that use math functions (`math.h`).  
+> `-Wall -Wextra` enables all compiler warning messages.
+
+**Example:**
+```bash
+gcc -Wall -Wextra -std=c99 -o fib fib.c
+./fib
+```
+
+---
+
+### Programs
+
+#### `fib.c` — Fibonacci Series
+Computes the first `n` terms of the Fibonacci sequence:
+
+$$F(0) = 0,\quad F(1) = 1,\quad F(n) = F(n-1) + F(n-2)$$
+
+- **Input:** number of terms `n`
+- **Output:** printed to screen and saved to `Fib.dat`
+
+```bash
+gcc -Wall -std=c99 -o fib fib.c && ./fib
+```
+
+---
+
+#### `arm.c` — Harmonic Series
+Computes the partial sum of the harmonic series up to `n` terms:
+
+$$H_n = \sum_{i=1}^{n} \frac{1}{i} = 1 + \frac{1}{2} + \frac{1}{3} + \cdots + \frac{1}{n}$$
+
+- **Input:** number of terms `n`
+- **Output:** each cumulative term printed and saved to `harm.dat`
+
+```bash
+gcc -Wall -std=c99 -o arm arm.c && ./arm
+```
+
+---
+
+#### `quad.c` — Inverse Squares Series
+Computes the sum of inverse squares up to `n` terms.  
+As it converges it approaches the classic result: $\sum_{i=1}^{\infty} \frac{1}{i^2} = \frac{\pi^2}{6} \approx 1.6449$
+
+$$Q_n = \sum_{i=1}^{n} \frac{1}{i^2}$$
+
+- **Input:** number of terms `n`
+- **Output:** printed to screen and saved to `quad.dat`
+
+```bash
+gcc -Wall -std=c99 -o quad quad.c && ./quad
+```
+
+---
+
+#### `moneda.c` — Coin Flip Simulation
+Simulates flipping a coin (heads or tails) using C's pseudorandom number generator.
+
+- **Input:** number of flips per experiment and number of experiment repetitions
+- **Output:** results on screen; `aguilas.dat` (heads) and `sellos.dat` (tails) for plotting distributions
+
+```bash
+gcc -Wall -std=c99 -o moneda moneda.c && ./moneda
+```
+
+---
+
+#### `proyectil1.c` — Projectile Motion (from ground level)
+Simulates the trajectory of a projectile launched from the ground under gravity.
+
+$$x(t) = v_0 \cos\theta \cdot t \qquad y(t) = v_0 \sin\theta \cdot t - \frac{1}{2}g t^2$$
+
+- **Input:** initial velocity $v_0$ [m/s] and launch angle $\theta$ [degrees]
+- **Output:** $(x, y)$ coordinates on screen and in `coordproy1.dat`, flight time, and max height
+
+```bash
+gcc -Wall -std=c99 -o proyectil1 proyectil1.c -lm && ./proyectil1
+```
+
+---
+
+#### `proyectil2.c` — Projectile Motion (from an initial height)
+Extends `proyectil1.c` with an initial height $h_0 = 150$ m. Initial conditions are hardcoded ($v_0 = 50$ m/s, $\theta = 45°$).
+
+$$y(t) = h_0 + v_0 \sin\theta \cdot t - \frac{1}{2}g t^2$$
+
+- **Output:** $(x, y)$ coordinates on screen and in `coordproy2.dat`
+
+```bash
+gcc -Wall -std=c99 -o proyectil2 proyectil2.c -lm && ./proyectil2
+```
+
+---
+
+#### `triangulo.c` — Triangle Area (Heron's Formula)
+Computes the area of a triangle given its three sides, first verifying the triangle inequality.
+
+$$p = \frac{a+b+c}{2} \qquad A = \sqrt{p(p-a)(p-b)(p-c)}$$
+
+- **Input:** sides $a$, $b$, $c$
+- **Output:** area of the triangle or an error message if the sides are invalid
+
+```bash
+gcc -Wall -std=c99 -o triangulo triangulo.c -lm && ./triangulo
+```
+
+---
+
+#### `vectores1.c` — 3D Vector Addition
+Adds two 3-dimensional integer vectors entered by the user.
+
+$$\vec{v_3} = \vec{v_1} + \vec{v_2}$$
+
+- **Input:** integer components of `vector1` and `vector2`
+- **Output:** components of the resulting `vector3`
+
+```bash
+gcc -Wall -std=c99 -o vectores1 vectores1.c && ./vectores1
+```
+
+---
+
+#### `LV.c` — Lotka-Volterra Model (Predator-Prey)
+Implements the approximate analytical solution of the **Lotka-Volterra** system, modeling predator-prey population dynamics:
+
+$$\frac{dH}{dt} = \alpha H - \beta H P \qquad \frac{dP}{dt} = \delta H P - \gamma P$$
+
+Default parameters: $\alpha=1.1$, $\beta=0.9$, $\gamma=1.0$, $\delta=2.0$, with initial conditions $H_0=0.9$, $P_0=1.8$. Also computes the conserved quantity $V(H,P)$.
+
+- **Output:** trajectories $(H, P, V)$ saved to `LV2.dat` (ready to plot with gnuplot)
+
+```bash
+gcc -Wall -std=c99 -o LV LV.c -lm && ./LV
+```
+
+---
+
+### Output files
+
+| Program | Output file |
+|---|---|
+| `fib.c` | `Fib.dat` |
+| `arm.c` | `harm.dat` |
+| `quad.c` | `quad.dat` |
+| `moneda.c` | `aguilas.dat`, `sellos.dat` |
+| `proyectil1.c` | `coordproy1.dat` |
+| `proyectil2.c` | `coordproy2.dat` |
+| `LV.c` | `LV2.dat` |
+
+---
+
+## Español
+
 Colección de programas en C desarrollados para aplicaciones numéricas y simulaciones físico-matemáticas.
 
 ---
