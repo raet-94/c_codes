@@ -1,31 +1,39 @@
 #include <stdio.h>
-int main ()
-{
+
+int main() {
   int n;
-  long double fn_1=0, fn_2=1;
-  long double fn=0;
-  int con;
+  long double prev = 0.0; /* F(0) */
+  long double curr = 1.0; /* F(1) */
+  long double next;
 
-  FILE *f=fopen("Fib.dat","w");
+  FILE *f = fopen("Fib.dat", "w");
+  if (!f) {
+    printf("Error: No se pudo abrir Fib.dat\n");
+    return 1;
+  }
 
-  printf("Cuantos terminos de Fibonacci quieres calcular? \n" );
+  printf("¿Cuántos términos de Fibonacci quieres calcular? \n");
   scanf("%i", &n);
-  for (con=0; con <n; con++)
-    {
-      if (con <= 1)
-	{
-	  fn=0;
-	}
-      else
-	{
-      fn= fn_1 + fn_2 ;
-      fn_1= fn_2;
-      fn_2= fn;
-          }
 
-      fprintf(f,"%i %0.0Lf\n", con,fn);
-      printf("%i %0.0Lf\n", con, fn);
-    }
-  
-return 0;
+  /* Imprimir y guardar los primeros dos términos manualmente */
+  if (n > 0) {
+    printf("0 0\n");
+    fprintf(f, "0 0\n");
+  }
+  if (n > 1) {
+    printf("1 1\n");
+    fprintf(f, "1 1\n");
+  }
+
+  /* Calcular el resto de la secuencia */
+  for (int i = 2; i < n; i++) {
+    next = prev + curr;
+    prev = curr;
+    curr = next;
+    printf("%i %0.0Lf\n", i, curr);
+    fprintf(f, "%i %0.0Lf\n", i, curr);
+  }
+
+  fclose(f);
+  return 0;
 }

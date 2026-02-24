@@ -1,34 +1,29 @@
 #include <stdio.h>
-int main ()
-{
-  int n=3;
-  int i;
-  int vector1[n];
-  int vector2[n];
-  int vector3[n];
-  printf("Caputre las cooordenadas del vector 1 :\n");
-  for (i=0;i<n; i++)
-    {
-      scanf("%d",&vector1[i]);
-      // printf("La entrada del vector 1 [%d] es : %d \n",i+1, vector1[i]);
-    }
-  printf("\n Caputre las cooordenadas del vector 2 :\n");
-     
-  for (i=0;i<n; i++)
-    {
-      scanf("%d",&vector2[i]);
-      //printf("La entrada del vector 2 [%d] es : %d \n",i+1, vector2[i]);
-    }
-  printf("\n");
-  for (i=0;i<n; i++)
-    {
-      vector3[i]= vector1[i]+ vector2[i];
-      printf("La entrada del vector 3 [%d] es : %d \n",i+1, vector3[i]);
-    }
-  
-  
-  
-   
-  
+
+#define N 3 /* Dimensión de los vectores */
+
+int main() {
+  int vector1[N];
+  int vector2[N];
+  int vector3[N];
+
+  printf("Capture las coordenadas del vector 1 (3 enteros):\n");
+  for (int i = 0; i < N; i++) {
+    scanf("%d", &vector1[i]);
+    printf("  vector1[%d] = %d\n", i + 1, vector1[i]);
+  }
+
+  printf("\nCapture las coordenadas del vector 2 (3 enteros):\n");
+  for (int i = 0; i < N; i++) {
+    scanf("%d", &vector2[i]);
+    printf("  vector2[%d] = %d\n", i + 1, vector2[i]);
+  }
+
+  printf("\nResultado de la suma (vector3 = vector1 + vector2):\n");
+  for (int i = 0; i < N; i++) {
+    vector3[i] = vector1[i] + vector2[i];
+    printf("  vector3[%d] = %d\n", i + 1, vector3[i]);
+  }
+
   return 0;
-}  
+}

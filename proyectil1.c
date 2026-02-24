@@ -1,52 +1,50 @@
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
 
-int main ()
-{
-  double x=0;
-  double y=0;
-  double t=0;
-  double h=0;
-  double theta=0;
-  double v0=0;
-  double g=9.80665;
-  double i;
+int main() {
+  double x = 0.0;
+  double y = 0.0;
+  double t; /* tiempo de vuelo */
+  double h; /* altura máxima */
+  double theta = 0.0;
+  double v0 = 0.0;
+  double g = 9.80665;
+  double delta = 0.01;
 
-  double delta=0.01;
-  double Pi=3.14159265;
+  /* Usamos M_PI de <math.h> en lugar de una constante manual */
+  double Pi = M_PI;
 
-  FILE *f= fopen("coordproy1.dat", "w");
+  FILE *f = fopen("coordproy1.dat", "w");
+  if (!f) {
+    printf("Error: No se pudo abrir coordproy1.dat\n");
+    return 1;
+  }
 
-
-  printf("Dame la velocidad inicial[m/s] del proyectil: \n");
-  scanf("%lf",&v0);
+  printf("Dame la velocidad inicial [m/s] del proyectil: \n");
+  scanf("%lf", &v0);
   printf("\n");
-  printf("Dame el angulo inicial (grados):\n");
-  scanf("%lf",&theta);
+  printf("Dame el ángulo inicial (grados): \n");
+  scanf("%lf", &theta);
 
-  t=2*(v0 *sin(theta*(Pi/180))/g);
+  /* Tiempo de vuelo y altura máxima */
+  t = 2.0 * (v0 * sin(theta * (Pi / 180.0)) / g);
+  h = (v0 * v0) * sin(theta * (Pi / 180.0)) * sin(theta * (Pi / 180.0)) /
+      (2.0 * g);
 
-  h=((v0*v0)*sin(theta*(Pi/180))*sin(theta*(Pi/180))/(2*g));
+  printf("El desplazamiento del proyectil, en x, y [metros]:\n");
 
-     printf ("El desplazamiento del proyectil, en x,y [metros]:\n");
+  /* Iteramos con paso delta en el tiempo (usamos double para i) */
+  for (double i = 0.0; i <= t; i += delta) {
+    x = v0 * cos(theta * Pi / 180.0) * i;
+    y = -0.5 * g * (i * i) + v0 * sin(theta * Pi / 180.0) * i;
 
-     for (i=0; i<=t ;i=i + delta)
-       
-       {
-	 x= v0 * cos(theta*Pi/180)*i;
-	 y=-0.5 * g *(i*i)+ v0 * sin(theta*Pi/180)*i;
+    fprintf(f, "%.5lf %.5lf \n", x, y);
+    printf("%.5lf %.5lf \n", x, y);
+  }
 
-	 fprintf(f,"%.5lf %.5lf \n",round(x),y);
-	 printf("%.5lf %.5lf \n",x,y);
-       }
+  printf("El tiempo de vuelo [segundos]: %.5lf \n", t);
+  printf("La altura máxima alcanzada [m]: %.5lf \n", h);
 
-     printf("El Tiempo de vuelo [segundos]:\n");
-     printf("%.5lf \n",t);
-     printf("La altura maxima alcanzada [m]: \n");
-     printf("%.5lf \n",h);
-
-
-
-  
-  return 0;  
+  fclose(f);
+  return 0;
 }

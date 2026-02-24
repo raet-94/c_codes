@@ -1,91 +1,81 @@
-#include<stdio.h>
-#include<math.h>
+#include <stdio.h>
+#include <math.h>
 
-//declaramos las funciones de depredador presa
+/* Modelo de Lotka-Volterra (depredador-presa)
+ * x = poblacion de presas (Hz)
+ * y = poblacion de depredadores (P)
+ * alpha, beta, gamma, delta = parametros del modelo
+ */
 
-long double f1(long double x, long double y, long double a, long double r );
-long double f2(long double x, long double y, long double b, long double m );
-long double V(long double x, long double y, long double b, long double m, long double a, long double r );
+/* Prototipos */
+long double f1(long double x, long double y, long double alpha, long double beta);
+long double f2(long double x, long double y, long double delta, long double gamma);
+long double V(long double x, long double y, long double delta, long double gamma,
+              long double alpha, long double beta);
 
-
-int main ()
+int main()
 {
-  //definimos las variables
- 
-  int i,N,j,M;
-  long double t0=0 ;
-  long double tn,x0, x,x1,y0,kx;
-  long double y,y1,ky,v,h;
-  
+    /* Parametros de integracion */
+    int N = 10000;
+    int M = 10;
+    long double t0 = 0.0L;
 
-  //Definimos constantes de LV
-  long double alpha, beta, delta,gamma,w,k1;
-  N=10000;
-  M=10;
-  t0=0.00;
-  x0=0.9;
-  y0=1.8;
-  alpha= 1.1;
-  beta=0.9;
-  gamma=1.0;
-  delta=2.0;
-  w=sqrt(alpha*gamma);
-  h=(3.151592)/(long double)N;
-  k1=(delta/beta)*sqrt(alpha/gamma);
-  //definimos nuestro dx
- 
-  //condiciones iniciales
-  x=x0;
-  y=y0;
-  FILE * f = fopen("LV2.dat", "w");
-  
+    /* Condiciones iniciales */
+    long double x0 = 0.9L;
+    long double y0 = 1.8L;
 
-  //Hacemos la "integral"
-  // printf("h=%0.5Lf x[%d]=%0.5Lf y[%d]=%0.5Lf \n", h , 0 ,a, 1, yn);
-  for(j=0; j<M; j++)
-    {
-      x = x0 + (double)j;
-      y = y0 + (double) j;
-      
-       for (i=0;i<4*N;i++)
-           {
-	    tn= t0 + i;
-	    //kx=f1(x,y,alpha,beta);
-	    //ky=f2(x,y,delta,gamma);
-	   
-	    //x1 = x +kx;
-	    //y1 = y +ky;
+    /* Constantes de Lotka-Volterra */
+    long double alpha = 1.1L;
+    long double beta  = 0.9L;
+    long double gamma = 1.0L;
+    long double delta = 2.0L;
 
-	
-	     x1= x*cos(w*(double)i/h) + k1*sin(w*(double )i/h);
-	     y1= y*cos(w*(double)i/h) - (1.0/k1)*sin(w*(double)i/h);
-	      v= V(x1,y1,delta,gamma,alpha,beta);
-	     printf(" t[%d]=%0.1Lf H[%d]=%0.5Lf P[%d]=%0.5Lf %0.5Lf \n" , i ,tn, i, x1,i, y1, V);
-	     fprintf(f, " %0.5Lf %0.5Lf %0.5Lf \n" , x1, y1, V);
-	
-	    }
-    } 
-  return 0;
-   
-  
+    /* Magnitudes derivadas */
+    long double w  = sqrtl(alpha * gamma);
+    long double h  = 3.151592L / (long double)N;
+    long double k1 = (delta / beta) * sqrtl(alpha / gamma);
+
+    FILE *f = fopen("LV2.dat", "w");
+    if (!f) {
+        printf("Error: No se pudo abrir LV2.dat\n");
+        return 1;
+    }
+
+    for (int j = 0; j < M; j++) {
+        long double x = x0 + (long double)j;
+        long double y = y0 + (long double)j;
+
+        for (int i = 0; i < 4 * N; i++) {
+            long double tn = t0 + (long double)i;
+            long double x1 = x * cosl(w * (long double)i / h) + k1 * sinl(w * (long double)i / h);
+            long double y1 = y * cosl(w * (long double)i / h) - (1.0L / k1) * sinl(w * (long double)i / h);
+            long double v  = V(x1, y1, delta, gamma, alpha, beta);
+
+            printf("t[%d]=%0.1Lf  H[%d]=%0.5Lf  P[%d]=%0.5Lf  V=%0.5Lf\n",
+                   i, tn, i, x1, i, y1, v);
+            fprintf(f, "%0.5Lf %0.5Lf %0.5Lf\n", x1, y1, v);
+        }
+    }
+
+    fclose(f);
+    return 0;
 }
 
-long double f1(long double x, long double y, long double alpha, long double beta )
+/* dH/dt = alpha*H - beta*H*P */
+long double f1(long double x, long double y, long double alpha, long double beta)
 {
-  //definimos la funcion a utilizar dH/dt= aH - rHP 
-  return (alpha*x-beta*x*y);   
-    
-	    
-}
-long double f2(long double x, long double y, long double delta, long double gamma )
-{
-  //definimos la funcion a utilizar dH/dt= bHP - mP 
-  return (delta*x*y-gamma*y);   
-    
-	    
-}
-long double V(long double x, long double y, long double delta, long double gamma, long double alpha, long double beta )
-{
-  return(-delta*x + gamma*(long double)log((double)x)-beta*y + alpha*(long double)log((double)y));
+    return (alpha * x - beta * x * y);
 }
 
+/* dP/dt = delta*H*P - gamma*P */
+long double f2(long double x, long double y, long double delta, long double gamma)
+{
+    return (delta * x * y - gamma * y);
+}
+
+/* Integral de movimiento V(H,P) */
+long double V(long double x, long double y, long double delta, long double gamma,
+              long double alpha, long double beta)
+{
+    return (-delta * x + gamma * logl(x) - beta * y + alpha * logl(y));
+}
